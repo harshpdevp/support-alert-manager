@@ -6,7 +6,11 @@
     
     <!-- Production SEO Meta Tags -->
     <title>Support Alert Manager & Task Timer | Enterprise Edition</title>
-    <link rel="manifest" href="app.webmanifest">
+
+    <!-- Favicon Link -->
+    <link rel="icon" type="image/png" href="image/overdue.png">
+
+    <link rel="manifest" href="manifest.json">
     <meta name="description" content="Professional responsive support alert manager featuring separated date and time pickers, 12+ custom alert sounds, and integrated monetization slots.">
     <meta name="robots" content="index, follow">
     
@@ -706,6 +710,46 @@
         }
 
         renderAlerts();
+
+        self.addEventListener('fetch', (event) => {
+            // Basic fetch handler required for PWA installation criteria
+            event.respondWith(fetch(event.request).catch(() => caches.match(event.request)));
+        });
+
+        window.addEventListener('beforeinstallprompt', (e) => {
+            // Prevent the mini-infobar from appearing on mobile
+            e.preventDefault();
+            // Stash the event so it can be triggered later.
+            deferredPrompt = e;
+            // Make your custom install button visible
+            document.getElementById('installBtn').style.display = 'block';
+        });
+
+        const installBtn = document.getElementById('installBtn');
+
+        installBtn.addEventListener('click', async () => {
+            if (!deferredPrompt) return;
+
+            // Show the native install prompt
+            deferredPrompt.prompt();
+
+            // Wait for the user to respond to the prompt
+            const { outcome } = await deferredPrompt.userChoice;
+            if (outcome === 'accepted') {
+                console.log('User accepted the install prompt');
+            } else {
+                console.log('User dismissed the install prompt');
+            }
+
+            // Clear the deferred prompt variable because it can only be used once
+            deferredPrompt = null;
+            installBtn.style.display = 'none';
+        });
+
+        window.addEventListener('appinstalled', (evt) => {
+            console.log('App was successfully installed');
+            document.getElementById('installBtn').style.display = 'none';
+        }); 
     </script>
 </body>
 </html>
