@@ -1,0 +1,650 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0">
+    
+    <!-- Production SEO Meta Tags -->
+    <title>Support Alert Manager & Task Timer | Enterprise Edition</title>
+    <meta name="description" content="Professional responsive support alert manager featuring separated date and time pickers, 12+ custom alert sounds, and integrated monetization slots.">
+    <meta name="robots" content="index, follow">
+    
+    <!-- PWA / Mobile Device Shortcut Manifest & Meta -->
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="apple-mobile-web-app-title" content="Support Alerts">
+    <link rel="apple-touch-icon" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/svgs/solid/bell.svg">
+    <link rel="manifest" href="data:application/manifest+json;base64,eyJuYW1lIjoiU3VwcG9ydCBBbGVydCBNYW5hZ2VyIiwic2hvcnRfbmFtZSI6IkFsZXJ0cyIsInN0YXJ0X3VybCI6Ii4iLCJkaXNwbGF5Ijoic3RhbmRhbG9uZSIsImJhY2tncm91bmRfY29sb3IiOiIjNGY0NmU1IiwidGhlbWVfY29sb3IiOiIjNGY0NmU1In0=">
+
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- FontAwesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <!-- Google AdSense SDK Dummy Token Script Injection -->
+    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-1234567890987654" crossorigin="anonymous"></script>
+
+    <style>
+        body { -webkit-font-smoothing: antialiased; }
+        .modal-transition { transition: opacity 0.3s ease, transform 0.3s ease; }
+    </style>
+</head>
+<body class="bg-slate-50 text-slate-800 min-h-screen flex flex-col justify-between">
+
+    <!-- Top Navigation / Header -->
+    <header class="bg-indigo-600 text-white shadow-md sticky top-0 z-20">
+        <div class="max-w-5xl mx-auto px-4 py-4 flex justify-between items-center">
+            <div class="flex items-center space-x-3">
+                <i class="fa-solid fa-bell text-2xl" aria-hidden="true"></i>
+                <h1 class="text-xl font-bold tracking-wide">Support Alerts Pro</h1>
+            </div>
+            <div class="flex items-center space-x-2">
+                <!-- Mobile-Only Install Shortcut Button (Hidden via CSS on lg+ desktops/laptops) -->
+                <button id="mobile-install-btn" onclick="openInstallModal()" class="hidden text-xs bg-indigo-500 hover:bg-indigo-400 text-white px-3 py-1.5 rounded-lg font-medium transition items-center space-x-1 shadow-sm">
+                    <i class="fa-solid fa-arrow-down-to-bracket"></i>
+                    <span>Install App</span>
+                </button>
+                <span id="current-time" class="hidden sm:inline-block text-xs sm:text-sm bg-indigo-700 px-3 py-1 rounded-full font-medium"></span>
+            </div>
+        </div>
+    </header>
+
+    <!-- Google AdSense Top Leaderboard Banner Ad -->
+    <div class="max-w-5xl w-full mx-auto px-4 pt-4">
+        <div class="bg-white p-2 rounded-xl shadow-sm border border-slate-100 text-center overflow-hidden">
+            <span class="block text-[9px] uppercase tracking-wider text-slate-400 mb-1">Google AdSense Leaderboard Banner (pub-1234567890987654)</span>
+            <ins class="adsbygoogle"
+                 style="display:block"
+                 data-ad-client="ca-pub-1234567890987654"
+                 data-ad-slot="1122334455"
+                 data-ad-format="auto"
+                 data-full-width-responsive="true"></ins>
+            <script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
+        </div>
+    </div>
+
+    <!-- Main Content Grid -->
+    <main class="max-w-5xl w-full mx-auto px-4 py-6 flex-grow pb-24 grid grid-cols-1 md:grid-cols-4 gap-6">
+        
+        <!-- Main Column (Dashboard & List) -->
+        <div class="md:col-span-3 space-y-6">
+            <!-- Dashboard Cards -->
+            <div class="grid grid-cols-2 gap-4">
+                <div class="bg-white p-4 rounded-xl shadow-sm border border-slate-100 flex items-center space-x-3">
+                    <div class="bg-indigo-50 text-indigo-600 p-3 rounded-lg">
+                        <i class="fa-solid fa-list-check text-xl"></i>
+                    </div>
+                    <div>
+                        <p class="text-xs text-slate-500 font-medium uppercase">Total Alerts</p>
+                        <h3 id="total-count" class="text-lg font-bold text-slate-700">0</h3>
+                    </div>
+                </div>
+                <div class="bg-white p-4 rounded-xl shadow-sm border border-slate-100 flex items-center space-x-3">
+                    <div class="bg-amber-50 text-amber-600 p-3 rounded-lg">
+                        <i class="fa-solid fa-clock text-xl"></i>
+                    </div>
+                    <div>
+                        <p class="text-xs text-slate-500 font-medium uppercase">Pending</p>
+                        <h3 id="pending-count" class="text-lg font-bold text-slate-700">0</h3>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Alert List Section -->
+            <div class="bg-white rounded-2xl shadow-sm border border-slate-100 overflow-hidden">
+                <div class="px-6 py-4 border-b border-slate-100 flex justify-between items-center">
+                    <h2 class="font-bold text-slate-700">Scheduled Support Queue</h2>
+                    <button onclick="clearAllAlerts()" class="text-xs text-rose-500 hover:text-rose-700 font-medium">Clear All</button>
+                </div>
+                <div id="alert-list" class="divide-y divide-slate-100">
+                    <!-- Dynamic Items Injected Here -->
+                </div>
+            </div>
+
+            <!-- Facebook / Meta Audience Network In-Feed Banner Ad Unit -->
+            <div class="bg-white p-4 rounded-2xl shadow-sm border border-slate-100 space-y-2">
+                <div class="flex justify-between items-center">
+                    <span class="text-[10px] uppercase tracking-wider text-slate-400 font-semibold">Meta Audience Network (In-Feed Ad)</span>
+                    <span class="text-[9px] bg-slate-100 text-slate-500 px-2 py-0.5 rounded font-mono">AppID: 987654321_FB</span>
+                </div>
+                <div class="bg-gradient-to-r from-blue-50 to-indigo-50 border border-blue-100 rounded-xl p-4 flex flex-col sm:flex-row items-center justify-between gap-4">
+                    <div class="flex items-center space-x-3">
+                        <div class="w-12 h-12 bg-blue-600 text-white rounded-xl flex items-center justify-center text-xl font-bold flex-shrink-0">
+                            <i class="fa-solid fa-bullhorn"></i>
+                        </div>
+                        <div>
+                            <h4 class="font-bold text-slate-800 text-sm">Boost Productivity with Task Automation</h4>
+                            <p class="text-xs text-slate-600">Integrate smart notifications and billing workflows seamlessly.</p>
+                        </div>
+                    </div>
+                    <a href="#" onclick="alert('Simulated Meta Ad Link Clicked')" class="bg-blue-600 hover:bg-blue-700 text-white text-xs font-semibold px-4 py-2 rounded-lg transition shadow-sm whitespace-nowrap">
+                        Install Now
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        <!-- Sidebar Column (Sidebar Ads) -->
+        <aside class="space-y-6">
+            <!-- Google Ads Rectangle Slot -->
+            <div class="bg-white p-4 rounded-2xl shadow-sm border border-slate-100 text-center space-y-2">
+                <span class="text-[10px] tracking-wider uppercase text-slate-400 font-semibold">Google AdSense (Rectangle)</span>
+                <div class="bg-slate-50 border border-slate-200 rounded-xl p-4 text-slate-400 text-xs flex flex-col items-center justify-center min-h-[220px]">
+                    <!-- Standard AdSense Ins Tag with Dummy Token -->
+                    <ins class="adsbygoogle"
+                         style="display:inline-block;width:250px;height:250px"
+                         data-ad-client="ca-pub-1234567890987654"
+                         data-ad-slot="9988776655"></ins>
+                    <script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
+                </div>
+            </div>
+
+            <!-- Meta Audience Network Native Card -->
+            <div class="bg-white p-4 rounded-2xl shadow-sm border border-slate-100 text-center space-y-2">
+                <span class="text-[10px] tracking-wider uppercase text-slate-400 font-semibold">Meta Sponsored Card</span>
+                <div class="bg-slate-50 border border-slate-200 rounded-xl p-4 text-left space-y-3">
+                    <div class="flex items-center space-x-2">
+                        <div class="w-8 h-8 bg-indigo-600 rounded-full text-white flex items-center justify-center text-xs font-bold">Ad</div>
+                        <div>
+                            <p class="text-xs font-bold text-slate-800">CloudSync Enterprise</p>
+                            <p class="text-[10px] text-slate-400">Sponsored &bull; meta_token_xyz</p>
+                        </div>
+                    </div>
+                    <p class="text-xs text-slate-600">Secure automated billing reminders and live server metric tracking tools.</p>
+                    <button onclick="alert('Simulated Meta Sponsored Action')" class="w-full bg-slate-800 hover:bg-slate-900 text-white text-xs font-medium py-2 rounded-lg transition">
+                        Learn More
+                    </button>
+                </div>
+            </div>
+        </aside>
+    </main>
+
+    <!-- Floating Action Button (FAB) -->
+    <div class="fixed bottom-6 right-6 z-30">
+        <button onclick="openModal()" aria-label="Add new alert" class="bg-indigo-600 hover:bg-indigo-700 text-white w-14 h-14 rounded-full shadow-lg flex items-center justify-center text-2xl transition transform hover:scale-105 active:scale-95 focus:outline-none">
+            <i class="fa-solid fa-plus"></i>
+        </button>
+    </div>
+
+    <!-- Modal Form (Create / Edit Alert) -->
+    <div id="alert-modal" class="fixed inset-0 bg-black/50 backdrop-blur-sm z-40 hidden flex items-center justify-center p-4">
+        <div class="bg-white w-full max-w-md rounded-2xl shadow-xl overflow-hidden modal-transition transform scale-95 opacity-0" id="modal-container">
+            <div class="px-6 py-4 bg-slate-900 text-white flex justify-between items-center">
+                <h3 id="modal-title" class="font-bold text-lg">New Support Alert</h3>
+                <button onclick="closeModal()" class="text-slate-400 hover:text-white text-xl">
+                    <i class="fa-solid fa-xmark"></i>
+                </button>
+            </div>
+            <form id="alert-form" onsubmit="handleFormSubmit(event)" class="p-6 space-y-4">
+                <input type="hidden" id="alert-id">
+                
+                <div>
+                    <label class="block text-xs font-semibold uppercase text-slate-500 mb-1">Title</label>
+                    <input type="text" id="alert-title" required class="w-full px-3 py-2 border border-slate-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500 text-sm" placeholder="e.g., Monthly Bill Pay / Server Check">
+                </div>
+
+                <div>
+                    <label class="block text-xs font-semibold uppercase text-slate-500 mb-1">Description</label>
+                    <textarea id="alert-desc" rows="2" required class="w-full px-3 py-2 border border-slate-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500 text-sm" placeholder="Add ticket details or bill particulars..."></textarea>
+                </div>
+
+                <!-- Separated Date and Time Inputs with Dismiss Button -->
+                <div class="bg-slate-50 p-3 rounded-xl border border-slate-200 space-y-3">
+                    <div class="flex justify-between items-center">
+                        <span class="text-xs font-bold uppercase text-slate-600">Schedule Options</span>
+                        <button type="button" onclick="dismissDateTimePickers()" class="text-[11px] text-indigo-600 hover:text-indigo-800 font-medium bg-indigo-50 px-2.5 py-1 rounded-md transition flex items-center space-x-1">
+                            <i class="fa-solid fa-check"></i>
+                            <span>Dismiss Picker</span>
+                        </button>
+                    </div>
+
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                        <div>
+                            <label class="block text-[10px] font-semibold uppercase text-slate-400 mb-1">Select Date</label>
+                            <input type="date" id="alert-date" required class="w-full px-3 py-2 border border-slate-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500 text-sm bg-white">
+                        </div>
+                        <div>
+                            <label class="block text-[10px] font-semibold uppercase text-slate-400 mb-1">Select Time</label>
+                            <input type="time" id="alert-time" required class="w-full px-3 py-2 border border-slate-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500 text-sm bg-white">
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 12 Alert Sound Profiles with Live Preview -->
+                <div>
+                    <label class="block text-xs font-semibold uppercase text-slate-500 mb-1">Alert Sound Style (12 Options)</label>
+                    <div class="flex space-x-2">
+                        <select id="alert-sound" class="w-full px-3 py-2 border border-slate-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500 text-sm bg-white">
+                            <optgroup label="Standard & Gentle">
+                                <option value="beep">Standard Beep</option>
+                                <option value="chime">Gentle Chime</option>
+                                <option value="bell">Temple Bell</option>
+                                <option value="marimba">Digital Marimba</option>
+                            </optgroup>
+                            <optgroup label="Reminders & Bills">
+                                <option value="coin">Coin Drop (Bill Pay)</option>
+                                <option value="cashregister">Cash Register Ding</option>
+                                <option value="notification">Soft Notification</option>
+                                <option value="pulse">Subtle Pulse</option>
+                            </optgroup>
+                            <optgroup label="Urgent & Emergency">
+                                <option value="alarm">Urgent Siren</option>
+                                <option value="critical">Critical Strobe</option>
+                                <option value="doublebeep">Double Rapid Beep</option>
+                                <option value="bugle">Emergency Bugle</option>
+                            </optgroup>
+                        </select>
+                        <button type="button" onclick="previewSelectedSound()" class="bg-indigo-50 hover:bg-indigo-100 text-indigo-600 px-3.5 py-2 rounded-lg text-sm transition flex items-center space-x-1" title="Play Sound Preview">
+                            <i class="fa-solid fa-volume-high"></i>
+                        </button>
+                    </div>
+                </div>
+
+                <div class="pt-2 flex space-x-3">
+                    <button type="button" onclick="closeModal()" class="w-1/2 bg-slate-100 hover:bg-slate-200 text-slate-700 py-2.5 rounded-lg font-medium text-sm transition">Cancel</button>
+                    <button type="submit" class="w-1/2 bg-indigo-600 hover:bg-indigo-700 text-white py-2.5 rounded-lg font-medium text-sm transition">Save Alert</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Mobile Install / Add Shortcut Modal -->
+    <div id="install-modal" class="fixed inset-0 bg-black/50 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
+        <div class="bg-white w-full max-w-md rounded-3xl shadow-2xl p-6 space-y-4">
+            <div class="flex justify-between items-center border-b border-slate-100 pb-3">
+                <div class="flex items-center space-x-2 text-indigo-600">
+                    <i class="fa-solid fa-arrow-down-to-bracket text-lg"></i>
+                    <h3 class="font-bold text-slate-800 text-base">Install App Shortcut</h3>
+                </div>
+                <button onclick="closeInstallModal()" class="text-slate-400 hover:text-slate-600 text-xl">
+                    <i class="fa-solid fa-xmark"></i>
+                </button>
+            </div>
+            
+            <div class="space-y-3 text-sm text-slate-600">
+                <p>Add this application to your phone's home screen for instant access and reliable alerts:</p>
+                
+                <div id="pwa-native-box" class="hidden bg-indigo-50 border border-indigo-100 p-4 rounded-xl space-y-2">
+                    <p class="font-semibold text-indigo-900">One-Tap Installation</p>
+                    <button onclick="triggerNativeInstall()" class="w-full bg-indigo-600 hover:bg-indigo-700 text-white font-medium py-2.5 rounded-lg transition text-sm shadow-sm">
+                        Install Now
+                    </button>
+                </div>
+
+                <div class="space-y-2 pt-2 border-t border-slate-100">
+                    <p class="font-semibold text-slate-700 text-xs uppercase tracking-wider">Device Instructions:</p>
+                    <div class="bg-slate-50 p-3 rounded-xl border border-slate-200 space-y-1">
+                        <p class="font-medium text-slate-800 text-xs"><i class="fa-brands fa-apple text-slate-700 mr-1"></i> iPhone & iPad (Safari)</p>
+                        <p class="text-xs text-slate-500">Tap the <strong class="text-slate-700">Share</strong> button <i class="fa-solid fa-arrow-up-from-bracket"></i> at the bottom toolbar and select <strong class="text-slate-700">"Add to Home Screen"</strong>.</p>
+                    </div>
+                    <div class="bg-slate-50 p-3 rounded-xl border border-slate-200 space-y-1">
+                        <p class="font-medium text-slate-800 text-xs"><i class="fa-brands fa-android text-emerald-600 mr-1"></i> Android (Chrome)</p>
+                        <p class="text-xs text-slate-500">Tap the browser menu <strong class="text-slate-700">(3 dots)</strong> and select <strong class="text-slate-700">"Add to Home screen"</strong>.</p>
+                    </div>
+                </div>
+            </div>
+
+            <button onclick="closeInstallModal()" class="w-full bg-slate-100 hover:bg-slate-200 text-slate-700 font-medium py-2.5 rounded-xl transition text-sm">
+                Got It
+            </button>
+        </div>
+    </div>
+
+    <!-- Ringing Active Notification Overlay Modal -->
+    <div id="ringing-modal" class="fixed inset-0 bg-rose-950/80 backdrop-blur-md z-50 hidden flex items-center justify-center p-4">
+        <div class="bg-white w-full max-w-sm rounded-3xl shadow-2xl p-6 text-center space-y-4 animate-bounce">
+            <div class="w-16 h-16 bg-rose-100 text-rose-600 rounded-full flex items-center justify-center mx-auto text-3xl">
+                <i class="fa-solid fa-bell-ring animate-pulse"></i>
+            </div>
+            <div>
+                <span class="text-xs bg-rose-50 text-rose-600 px-3 py-1 rounded-full font-bold uppercase tracking-wider">Alert Ringing Now</span>
+                <h3 id="ring-title" class="text-xl font-bold text-slate-800 mt-2">Alert Title</h3>
+                <p id="ring-desc" class="text-sm text-slate-600 mt-1">Alert description text goes here...</p>
+            </div>
+            <button onclick="dismissRingingAlert()" class="w-full bg-rose-600 hover:bg-rose-700 text-white font-bold py-3 rounded-xl shadow-lg transition">
+                Dismiss Alarm
+            </button>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="bg-white border-t border-slate-100 py-4 text-center text-xs text-slate-400">
+        Support Alert Manager Pro &bull; Advanced Audio & Monetization Engine
+    </footer>
+
+    <!-- JavaScript Core Script -->
+    <script>
+        let alerts = JSON.parse(localStorage.getItem('support_alerts_pro_v3')) || [];
+        let activeAudioInterval = null;
+        let audioCtx = null;
+        let deferredPrompt = null;
+
+        // Detect if user is on a mobile device to show/hide the install button
+        function checkMobileDevice() {
+            const isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent) || window.innerWidth < 768;
+            const installBtn = document.getElementById('mobile-install-btn');
+            if (isMobile && installBtn) {
+                installBtn.classList.remove('hidden');
+                installBtn.classList.add('flex');
+            }
+        }
+        window.addEventListener('resize', checkMobileDevice);
+        document.addEventListener('DOMContentLoaded', checkMobileDevice);
+
+        // Initialize Audio Context on Interaction
+        document.addEventListener('click', () => {
+            if (!audioCtx) {
+                audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+            }
+        }, { once: true });
+
+        // Shortcut / PWA Installation Listeners
+        window.addEventListener('beforeinstallprompt', (e) => {
+            e.preventDefault();
+            deferredPrompt = e;
+            const mobileBtn = document.getElementById('mobile-install-btn');
+            if (mobileBtn) {
+                mobileBtn.classList.remove('hidden');
+                mobileBtn.classList.add('flex');
+            }
+            document.getElementById('pwa-native-box').classList.remove('hidden');
+        });
+
+        function openInstallModal() {
+            document.getElementById('install-modal').classList.remove('hidden');
+        }
+
+        function closeInstallModal() {
+            document.getElementById('install-modal').classList.add('hidden');
+        }
+
+        function triggerNativeInstall() {
+            if (deferredPrompt) {
+                deferredPrompt.prompt();
+                deferredPrompt.userChoice.then((choiceResult) => {
+                    if (choiceResult.outcome === 'accepted') {
+                        document.getElementById('pwa-native-box').classList.add('hidden');
+                    }
+                    deferredPrompt = null;
+                    closeInstallModal();
+                });
+            } else {
+                alert("Automatic prompt unavailable. Please use your mobile browser settings menu to add this app to your home screen.");
+            }
+        }
+
+        // Web Audio Synthesizer with 12 Professional Sound Profiles
+        function playTone(type) {
+            if (!audioCtx) {
+                audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+            }
+            if (audioCtx.state === 'suspended') {
+                audioCtx.resume();
+            }
+
+            try {
+                const osc = audioCtx.createOscillator();
+                const gain = audioCtx.createGain();
+                osc.connect(gain);
+                gain.connect(audioCtx.destination);
+                const t = audioCtx.currentTime;
+
+                if (type === 'chime') {
+                    osc.type = 'sine'; osc.frequency.setValueAtTime(587.33, t); gain.gain.setValueAtTime(0.15, t); osc.start(t); osc.stop(t + 0.4);
+                } else if (type === 'alarm') {
+                    osc.type = 'sawtooth'; osc.frequency.setValueAtTime(440, t); osc.frequency.setValueAtTime(880, t + 0.15); gain.gain.setValueAtTime(0.2, t); osc.start(t); osc.stop(t + 0.3);
+                } else if (type === 'marimba') {
+                    osc.type = 'triangle'; osc.frequency.setValueAtTime(659.25, t); gain.gain.setValueAtTime(0.2, t); osc.start(t); osc.stop(t + 0.15);
+                } else if (type === 'bell') {
+                    osc.type = 'sine'; osc.frequency.setValueAtTime(987.77, t); gain.gain.setValueAtTime(0.25, t); osc.start(t); osc.stop(t + 0.6);
+                } else if (type === 'coin') {
+                    osc.type = 'sine'; osc.frequency.setValueAtTime(987.77, t); osc.frequency.setValueAtTime(1318.51, t + 0.08); gain.gain.setValueAtTime(0.2, t); osc.start(t); osc.stop(t + 0.3);
+                } else if (type === 'cashregister') {
+                    osc.type = 'square'; osc.frequency.setValueAtTime(1046.50, t); osc.frequency.setValueAtTime(1318.51, t + 0.1); gain.gain.setValueAtTime(0.15, t); osc.start(t); osc.stop(t + 0.35);
+                } else if (type === 'notification') {
+                    osc.type = 'sine'; osc.frequency.setValueAtTime(523.25, t); gain.gain.setValueAtTime(0.1, t); osc.start(t); osc.stop(t + 0.2);
+                } else if (type === 'pulse') {
+                    osc.type = 'triangle'; osc.frequency.setValueAtTime(300, t); gain.gain.setValueAtTime(0.2, t); osc.start(t); osc.stop(t + 0.25);
+                } else if (type === 'critical') {
+                    osc.type = 'sawtooth'; osc.frequency.setValueAtTime(900, t); osc.frequency.setValueAtTime(500, t + 0.1); gain.gain.setValueAtTime(0.25, t); osc.start(t); osc.stop(t + 0.4);
+                } else if (type === 'doublebeep') {
+                    osc.type = 'sine'; osc.frequency.setValueAtTime(880, t); osc.frequency.setValueAtTime(880, t + 0.15); gain.gain.setValueAtTime(0.2, t); osc.start(t); osc.stop(t + 0.3);
+                } else if (type === 'bugle') {
+                    osc.type = 'sawtooth'; osc.frequency.setValueAtTime(523.25, t); osc.frequency.setValueAtTime(659.25, t + 0.1); osc.frequency.setValueAtTime(783.99, t + 0.2); gain.gain.setValueAtTime(0.2, t); osc.start(t); osc.stop(t + 0.45);
+                } else {
+                    osc.type = 'sine'; osc.frequency.setValueAtTime(800, t); gain.gain.setValueAtTime(0.15, t); osc.start(t); osc.stop(t + 0.2);
+                }
+            } catch (e) {
+                console.error("Audio engine error:", e);
+            }
+        }
+
+        function previewSelectedSound() {
+            playTone(document.getElementById('alert-sound').value);
+        }
+
+        function dismissDateTimePickers() {
+            document.getElementById('alert-date').blur();
+            document.getElementById('alert-time').blur();
+        }
+
+        // Clock & Alarm Monitoring Engine (Every 1 second)
+        setInterval(() => {
+            const now = new Date();
+            const timeString = now.toLocaleDateString() + ' ' + now.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', second: '2-digit' });
+            const timeEl = document.getElementById('current-time');
+            if (timeEl) timeEl.innerText = timeString;
+            
+            checkAlarms(now);
+        }, 1000);
+
+        function checkAlarms(now) {
+            const year = now.getFullYear();
+            const month = String(now.getMonth() + 1).padStart(2, '0');
+            const day = String(now.getDate()).padStart(2, '0');
+            const hours = String(now.getHours()).padStart(2, '0');
+            const minutes = String(now.getMinutes()).padStart(2, '0');
+            
+            const currentFormatted = `${year}-${month}-${day} ${hours}:${minutes}`;
+            let stateUpdated = false;
+
+            alerts.forEach(alert => {
+                if (!alert.triggered && alert.datetime === currentFormatted) {
+                    alert.triggered = true;
+                    stateUpdated = true;
+                    triggerAlarmOverlay(alert);
+                }
+            });
+
+            if (stateUpdated) {
+                saveAndRender();
+            }
+        }
+
+        function triggerAlarmOverlay(alert) {
+            document.getElementById('ring-title').innerText = alert.title;
+            document.getElementById('ring-desc').innerText = alert.desc;
+            document.getElementById('ringing-modal').classList.remove('hidden');
+
+            playTone(alert.sound);
+            if (navigator.vibrate) navigator.vibrate([300, 100, 300]);
+
+            activeAudioInterval = setInterval(() => {
+                playTone(alert.sound);
+                if (navigator.vibrate) navigator.vibrate([300, 100, 300]);
+            }, 1200);
+
+            if (window.Notification && Notification.permission === "granted") {
+                new Notification(alert.title, { body: alert.desc });
+            }
+        }
+
+        function dismissRingingAlert() {
+            clearInterval(activeAudioInterval);
+            document.getElementById('ringing-modal').classList.add('hidden');
+        }
+
+        // Render UI Pipeline
+        function renderAlerts() {
+            const listEl = document.getElementById('alert-list');
+            document.getElementById('total-count').innerText = alerts.length;
+            document.getElementById('pending-count').innerText = alerts.filter(a => !a.triggered).length;
+
+            if (alerts.length === 0) {
+                listEl.innerHTML = `
+                    <div class="px-6 py-12 text-center text-slate-400">
+                        <i class="fa-regular fa-folder-open text-3xl mb-2"></i>
+                        <p class="text-sm">No support alerts configured. Click '+' to schedule one.</p>
+                    </div>
+                `;
+                return;
+            }
+
+            alerts.sort((a, b) => new Date(a.datetime) - new Date(b.datetime));
+
+            listEl.innerHTML = alerts.map(alert => {
+                const dateObj = new Date(alert.datetime.replace(' ', 'T'));
+                const formattedDate = !isNaN(dateObj) ? dateObj.toLocaleDateString() + ' ' + dateObj.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }) : alert.datetime;
+                
+                return `
+                    <div class="px-6 py-4 flex flex-col sm:flex-row sm:items-center justify-between gap-3 hover:bg-slate-50/80 transition">
+                        <div class="space-y-1">
+                            <div class="flex items-center space-x-2">
+                                <h4 class="font-bold text-slate-800 text-sm sm:text-base">${escapeHtml(alert.title)}</h4>
+                                <span class="text-xs px-2 py-0.5 rounded-full font-medium ${alert.triggered ? 'bg-slate-100 text-slate-500' : 'bg-indigo-50 text-indigo-600'}">
+                                    ${alert.triggered ? 'Triggered' : 'Scheduled'}
+                                </span>
+                            </div>
+                            <p class="text-xs sm:text-sm text-slate-600">${escapeHtml(alert.desc)}</p>
+                            <p class="text-xs text-slate-400 flex items-center space-x-1">
+                                <i class="fa-regular fa-clock"></i>
+                                <span>${formattedDate} &bull; Sound: <span class="capitalize">${alert.sound}</span></span>
+                            </p>
+                        </div>
+                        <div class="flex items-center space-x-2 self-end sm:self-center">
+                            <button onclick="editAlert('${alert.id}')" class="p-2 text-slate-400 hover:text-indigo-600 transition" title="Edit">
+                                <i class="fa-solid fa-pen-to-square"></i>
+                            </button>
+                            <button onclick="deleteAlert('${alert.id}')" class="p-2 text-slate-400 hover:text-rose-600 transition" title="Delete">
+                                <i class="fa-solid fa-trash-can"></i>
+                            </button>
+                        </div>
+                    </div>
+                `;
+            }).join('');
+        }
+
+        // Modal Lifecycle Management
+        function openModal(id = null) {
+            const modal = document.getElementById('alert-modal');
+            const container = document.getElementById('modal-container');
+            const form = document.getElementById('alert-form');
+            form.reset();
+            document.getElementById('alert-id').value = '';
+
+            if (id) {
+                document.getElementById('modal-title').innerText = 'Edit Support Alert';
+                const alert = alerts.find(a => a.id === id);
+                if (alert) {
+                    document.getElementById('alert-id').value = alert.id;
+                    document.getElementById('alert-title').value = alert.title;
+                    document.getElementById('alert-desc').value = alert.desc;
+                    
+                    const parts = alert.datetime.split(' ');
+                    if(parts.length === 2) {
+                        document.getElementById('alert-date').value = parts[0];
+                        document.getElementById('alert-time').value = parts[1];
+                    }
+                    document.getElementById('alert-sound').value = alert.sound;
+                }
+            } else {
+                document.getElementById('modal-title').innerText = 'New Support Alert';
+                const now = new Date();
+                now.setMinutes(now.getMinutes() + 15);
+                
+                const yyyy = now.getFullYear();
+                const mm = String(now.getMonth() + 1).padStart(2, '0');
+                const dd = String(now.getDate()).padStart(2, '0');
+                const hh = String(now.getHours()).padStart(2, '0');
+                const min = String(now.getMinutes()).padStart(2, '0');
+
+                document.getElementById('alert-date').value = `${yyyy}-${mm}-${dd}`;
+                document.getElementById('alert-time').value = `${hh}:${min}`;
+            }
+
+            modal.classList.remove('hidden');
+            setTimeout(() => {
+                container.classList.remove('scale-95', 'opacity-0');
+                container.classList.add('scale-100', 'opacity-100');
+            }, 10);
+        }
+
+        function closeModal() {
+            const modal = document.getElementById('alert-modal');
+            const container = document.getElementById('modal-container');
+            container.classList.remove('scale-100', 'opacity-100');
+            container.classList.add('scale-95', 'opacity-0');
+            setTimeout(() => modal.classList.add('hidden'), 300);
+        }
+
+        // CRUD Operations
+        function handleFormSubmit(e) {
+            e.preventDefault();
+            const id = document.getElementById('alert-id').value;
+            const title = document.getElementById('alert-title').value;
+            const desc = document.getElementById('alert-desc').value;
+            const dateVal = document.getElementById('alert-date').value;
+            const timeVal = document.getElementById('alert-time').value;
+            const datetime = `${dateVal} ${timeVal}`;
+            const sound = document.getElementById('alert-sound').value;
+
+            if (id) {
+                alerts = alerts.map(a => a.id === id ? { ...a, title, desc, datetime, sound, triggered: false } : a);
+            } else {
+                alerts.push({
+                    id: Date.now().toString(),
+                    title,
+                    desc,
+                    datetime,
+                    sound,
+                    triggered: false
+                });
+            }
+
+            saveAndRender();
+            closeModal();
+        }
+
+        function editAlert(id) { openModal(id); }
+
+        function deleteAlert(id) {
+            if (confirm('Permanently delete this alert?')) {
+                alerts = alerts.filter(a => a.id !== id);
+                saveAndRender();
+            }
+        }
+
+        function clearAllAlerts() {
+            if (confirm('Clear all scheduled alerts?')) {
+                alerts = [];
+                saveAndRender();
+            }
+        }
+
+        function saveAndRender() {
+            localStorage.setItem('support_alerts_pro_v3', JSON.stringify(alerts));
+            renderAlerts();
+        }
+
+        function escapeHtml(str) {
+            return str.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;").replace(/'/g, "&#039;");
+        }
+
+        // Initialization
+        renderAlerts();
+        if (window.Notification && Notification.permission === "default") {
+            Notification.requestPermission();
+        }
+    </script>
+</body>
+</html>
