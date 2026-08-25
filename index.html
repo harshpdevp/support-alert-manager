@@ -9,12 +9,12 @@
     <meta name="description" content="Professional responsive support alert manager featuring separated date and time pickers, 12+ custom alert sounds, and integrated monetization slots.">
     <meta name="robots" content="index, follow">
     
-    <!-- PWA / Mobile Device Shortcut Manifest & Meta -->
-    <meta name="apple-mobile-web-app-capable" content="yes">
-    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-    <meta name="apple-mobile-web-app-title" content="Support Alerts">
+    <!-- Favicon & App Icons -->
+    <link rel="icon" type="image/svg+xml" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/svgs/solid/bell.svg">
     <link rel="apple-touch-icon" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/svgs/solid/bell.svg">
-    <link rel="manifest" href="data:application/manifest+json;base64,eyJuYW1lIjoiU3VwcG9ydCBBbGVydCBNYW5hZ2VyIiwic2hvcnRfbmFtZSI6IkFsZXJ0cyIsInN0YXJ0X3VybCI6Ii4iLCJkaXNwbGF5Ijoic3RhbmRhbG9uZSIsImJhY2tncm91bmRfY29sb3IiOiIjNGY0NmU1IiwidGhlbWVfY29sb3IiOiIjNGY0NmU1In0=">
+    
+    <!-- PWA Manifest -->
+    <link rel="manifest" href="data:application/manifest+json;base64,eyJuYW1lIjoiU3VwcG9ydCBBbGVydCBNYW5hZ2VyIiwic2hvcnRfbmFtZSI6IkFsZXJ0cyIsInN0YXJ0X3VybCI6Ii4iLCJkaXNwbGF5Ijoic3RhbmRhbG9uZSIsImJhY2tncm91bmRfY29sb3IiOiIjNGY0NmU1IiwidGhlbWVfY29sb3IiOiIjNGY0NmU1IiwiaWNvbnMiOlt7InNyYyI6Imh0dHBzOi8vY2RuanMuY2xvdWRmbGFyZS5jb20vY2pheHMvbGlicy9mb250LWF3ZXNvbWUvNi40LjAvc3Zncy9zb2xpZC9iZWxsLnN2ZyIsInNpemVzIjoiNTEyeDUxMiIsInR5cGUiOiJpbWFnZS9zdmcrhtbifV19">
 
     <!-- Tailwind CSS CDN -->
     <script src="https://cdn.tailwindcss.com"></script>
@@ -39,7 +39,7 @@
                 <h1 class="text-xl font-bold tracking-wide">Support Alerts Pro</h1>
             </div>
             <div class="flex items-center space-x-2">
-                <!-- Mobile-Only Install Shortcut Button (Hidden via CSS on lg+ desktops/laptops) -->
+                <!-- Mobile-Only Install Shortcut Button -->
                 <button id="mobile-install-btn" onclick="openInstallModal()" class="hidden text-xs bg-indigo-500 hover:bg-indigo-400 text-white px-3 py-1.5 rounded-lg font-medium transition items-center space-x-1 shadow-sm">
                     <i class="fa-solid fa-arrow-down-to-bracket"></i>
                     <span>Install App</span>
@@ -64,7 +64,7 @@
     </div>
 
     <!-- Main Content Grid -->
-    <main class="max-w-5xl w-full mx-auto px-4 py-6 flex-grow pb-24 grid grid-cols-1 md:grid-cols-4 gap-6">
+    <main class="max-w-5xl w-full mx-auto px-4 py-6 flex-grow pb-28 grid grid-cols-1 md:grid-cols-4 gap-6">
         
         <!-- Main Column (Dashboard & List) -->
         <div class="md:col-span-3 space-y-6">
@@ -130,7 +130,6 @@
             <div class="bg-white p-4 rounded-2xl shadow-sm border border-slate-100 text-center space-y-2">
                 <span class="text-[10px] tracking-wider uppercase text-slate-400 font-semibold">Google AdSense (Rectangle)</span>
                 <div class="bg-slate-50 border border-slate-200 rounded-xl p-4 text-slate-400 text-xs flex flex-col items-center justify-center min-h-[220px]">
-                    <!-- Standard AdSense Ins Tag with Dummy Token -->
                     <ins class="adsbygoogle"
                          style="display:inline-block;width:250px;height:250px"
                          data-ad-client="ca-pub-1234567890987654"
@@ -164,6 +163,27 @@
         <button onclick="openModal()" aria-label="Add new alert" class="bg-indigo-600 hover:bg-indigo-700 text-white w-14 h-14 rounded-full shadow-lg flex items-center justify-center text-2xl transition transform hover:scale-105 active:scale-95 focus:outline-none">
             <i class="fa-solid fa-plus"></i>
         </button>
+    </div>
+
+    <!-- Custom In-App Install Notification Banner (Appears automatically) -->
+    <div id="install-notification-banner" class="hidden fixed bottom-4 left-4 right-4 sm:left-auto sm:right-6 sm:max-w-sm bg-slate-900 text-white p-4 rounded-2xl shadow-2xl z-40 border border-slate-700 flex items-center justify-between gap-3 animate-bounce">
+        <div class="flex items-center space-x-3">
+            <div class="w-10 h-10 bg-indigo-600 rounded-xl flex items-center justify-center text-white text-lg flex-shrink-0">
+                <i class="fa-solid fa-bell"></i>
+            </div>
+            <div>
+                <h4 class="font-bold text-sm">Install Support Alerts</h4>
+                <p class="text-xs text-slate-300">Add app to device for quick access.</p>
+            </div>
+        </div>
+        <div class="flex items-center space-x-2">
+            <button onclick="triggerNativeInstall()" class="bg-indigo-600 hover:bg-indigo-500 text-white text-xs font-bold px-3.5 py-2 rounded-lg transition whitespace-nowrap shadow-sm">
+                Install
+            </button>
+            <button onclick="dismissInstallBanner()" class="text-slate-400 hover:text-white p-1 text-sm">
+                <i class="fa-solid fa-xmark"></i>
+            </button>
+        </div>
     </div>
 
     <!-- Modal Form (Create / Edit Alert) -->
@@ -309,17 +329,30 @@
 
     <!-- Footer -->
     <footer class="bg-white border-t border-slate-100 py-4 text-center text-xs text-slate-400">
-        Support Alert Manager Pro &bull; Advanced Audio & Monetization Engine
+        Support Alert Manager Pro &bull; Advanced Audio & Protection Engine
     </footer>
 
     <!-- JavaScript Core Script -->
     <script>
-        let alerts = JSON.parse(localStorage.getItem('support_alerts_pro_v3')) || [];
+        // Disable Right-Click Context Menu to protect source code viewing
+        document.addEventListener('contextmenu', event => event.preventDefault());
+
+        // Disable Common DevTools Keyboard Shortcuts (F12, Ctrl+Shift+I, Ctrl+Shift+J, Ctrl+U)
+        document.addEventListener('keydown', event => {
+            if (
+                event.key === 'F12' ||
+                (event.ctrlKey && event.shiftKey && ['I', 'J', 'C'].includes(event.key.toUpperCase())) ||
+                (event.ctrlKey && event.key.toUpperCase() === 'U')
+            ) {
+                event.preventDefault();
+            }
+        });
+
+        let alerts = JSON.parse(localStorage.getItem('support_alerts_pro_v4')) || [];
         let activeAudioInterval = null;
         let audioCtx = null;
         let deferredPrompt = null;
 
-        // Detect if user is on a mobile device to show/hide the install button
         function checkMobileDevice() {
             const isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent) || window.innerWidth < 768;
             const installBtn = document.getElementById('mobile-install-btn');
@@ -331,14 +364,13 @@
         window.addEventListener('resize', checkMobileDevice);
         document.addEventListener('DOMContentLoaded', checkMobileDevice);
 
-        // Initialize Audio Context on Interaction
         document.addEventListener('click', () => {
             if (!audioCtx) {
                 audioCtx = new (window.AudioContext || window.webkitAudioContext)();
             }
         }, { once: true });
 
-        // Shortcut / PWA Installation Listeners
+        // PWA Installation & Notification Banner Listeners
         window.addEventListener('beforeinstallprompt', (e) => {
             e.preventDefault();
             deferredPrompt = e;
@@ -348,7 +380,17 @@
                 mobileBtn.classList.add('flex');
             }
             document.getElementById('pwa-native-box').classList.remove('hidden');
+            
+            // Show the custom bottom notification banner for app installation
+            if (!localStorage.getItem('install_banner_dismissed')) {
+                document.getElementById('install-notification-banner').classList.remove('hidden');
+            }
         });
+
+        function dismissInstallBanner() {
+            document.getElementById('install-notification-banner').classList.add('hidden');
+            localStorage.setItem('install_banner_dismissed', 'true');
+        }
 
         function openInstallModal() {
             document.getElementById('install-modal').classList.remove('hidden');
@@ -364,12 +406,13 @@
                 deferredPrompt.userChoice.then((choiceResult) => {
                     if (choiceResult.outcome === 'accepted') {
                         document.getElementById('pwa-native-box').classList.add('hidden');
+                        document.getElementById('install-notification-banner').classList.add('hidden');
                     }
                     deferredPrompt = null;
                     closeInstallModal();
                 });
             } else {
-                alert("Automatic prompt unavailable. Please use your mobile browser settings menu to add this app to your home screen.");
+                openInstallModal();
             }
         }
 
@@ -428,7 +471,7 @@
             document.getElementById('alert-time').blur();
         }
 
-        // Clock & Alarm Monitoring Engine (Every 1 second)
+        // Clock & Alarm Monitoring Engine
         setInterval(() => {
             const now = new Date();
             const timeString = now.toLocaleDateString() + ' ' + now.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', second: '2-digit' });
@@ -484,7 +527,6 @@
             document.getElementById('ringing-modal').classList.add('hidden');
         }
 
-        // Render UI Pipeline
         function renderAlerts() {
             const listEl = document.getElementById('alert-list');
             document.getElementById('total-count').innerText = alerts.length;
@@ -534,7 +576,6 @@
             }).join('');
         }
 
-        // Modal Lifecycle Management
         function openModal(id = null) {
             const modal = document.getElementById('alert-modal');
             const container = document.getElementById('modal-container');
@@ -587,7 +628,6 @@
             setTimeout(() => modal.classList.add('hidden'), 300);
         }
 
-        // CRUD Operations
         function handleFormSubmit(e) {
             e.preventDefault();
             const id = document.getElementById('alert-id').value;
@@ -632,7 +672,7 @@
         }
 
         function saveAndRender() {
-            localStorage.setItem('support_alerts_pro_v3', JSON.stringify(alerts));
+            localStorage.setItem('support_alerts_pro_v4', JSON.stringify(alerts));
             renderAlerts();
         }
 
@@ -640,7 +680,6 @@
             return str.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;").replace(/'/g, "&#039;");
         }
 
-        // Initialization
         renderAlerts();
         if (window.Notification && Notification.permission === "default") {
             Notification.requestPermission();
