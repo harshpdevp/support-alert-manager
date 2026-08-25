@@ -6,6 +6,7 @@
     
     <!-- Production SEO Meta Tags -->
     <title>Support Alert Manager & Task Timer | Enterprise Edition</title>
+    <link rel="manifest" href="app.webmanifest">
     <meta name="description" content="Professional responsive support alert manager featuring separated date and time pickers, 12+ custom alert sounds, and integrated monetization slots.">
     <meta name="robots" content="index, follow">
     
@@ -13,8 +14,8 @@
     <link rel="icon" type="image/svg+xml" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/svgs/solid/bell.svg">
     <link rel="apple-touch-icon" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/svgs/solid/bell.svg">
     
-    <!-- PWA Manifest -->
-    <link rel="manifest" href="data:application/manifest+json;base64,eyJuYW1lIjoiU3VwcG9ydCBBbGVydCBNYW5hZ2VyIiwic2hvcnRfbmFtZSI6IkFsZXJ0cyIsInN0YXJ0X3VybCI6Ii4iLCJkaXNwbGF5Ijoic3RhbmRhbG9uZSIsImJhY2tncm91bmRfY29sb3IiOiIjNGY0NmU1IiwidGhlbWVfY29sb3IiOiIjNGY0NmU1IiwiaWNvbnMiOlt7InNyYyI6Imh0dHBzOi8vY2RuanMuY2xvdWRmbGFyZS5jb20vY2pheHMvbGlicy9mb250LWF3ZXNvbWUvNi40LjAvc3Zncy9zb2xpZC9iZWxsLnN2ZyIsInNpemVzIjoiNTEyeDUxMiIsInR5cGUiOiJpbWFnZS9zdmcrhtbifV19">
+    <!-- True Standalone App PWA Manifest (Forces App Installation with Icon instead of browser shortcut) -->
+    <link rel="manifest" href="data:application/manifest+json;base64,eyJuYW1lIjoiU3VwcG9ydCBBbGVydHMgUHJvIiwic2hvcnRfbmFtZSI6IkFsZXJ0cyIsInN0YXJ0X3VybCI6Ii4iLCJkaXNwbGF5Ijoic3RhbmRhbG9uZSIsImJhY2tncm91bmRfY29sb3IiOiIjNGY0NmU1IiwidGhlbWVfY29sb3IiOiIjNGY0NmU1IiwiaWNvbnMiOlt7InNyYyI6Imh0dHBzOi8vY2RuanMuY2xvdWRmbGFyZS5jb20vY2pheHMvbGlicy9mb250LWF3ZXNvbWUvNi40LjAvc3Zncy9zb2xpZC9iZWxsLnN2ZyIsInNpemVzIjoiNTEyeDUxMiIsInR5cGUiOiJpbWFnZS9zdmcrhtbifV19">
 
     <!-- Tailwind CSS CDN -->
     <script src="https://cdn.tailwindcss.com"></script>
@@ -39,7 +40,7 @@
                 <h1 class="text-xl font-bold tracking-wide">Support Alerts Pro</h1>
             </div>
             <div class="flex items-center space-x-2">
-                <!-- Mobile-Only Install Shortcut Button -->
+                <!-- Mobile-Only Install App Button -->
                 <button id="mobile-install-btn" onclick="openInstallModal()" class="hidden text-xs bg-indigo-500 hover:bg-indigo-400 text-white px-3 py-1.5 rounded-lg font-medium transition items-center space-x-1 shadow-sm">
                     <i class="fa-solid fa-arrow-down-to-bracket"></i>
                     <span>Install App</span>
@@ -165,15 +166,15 @@
         </button>
     </div>
 
-    <!-- Custom In-App Install Notification Banner (Appears automatically) -->
+    <!-- Custom In-App Install Banner -->
     <div id="install-notification-banner" class="hidden fixed bottom-4 left-4 right-4 sm:left-auto sm:right-6 sm:max-w-sm bg-slate-900 text-white p-4 rounded-2xl shadow-2xl z-40 border border-slate-700 flex items-center justify-between gap-3 animate-bounce">
         <div class="flex items-center space-x-3">
             <div class="w-10 h-10 bg-indigo-600 rounded-xl flex items-center justify-center text-white text-lg flex-shrink-0">
                 <i class="fa-solid fa-bell"></i>
             </div>
             <div>
-                <h4 class="font-bold text-sm">Install Support Alerts</h4>
-                <p class="text-xs text-slate-300">Add app to device for quick access.</p>
+                <h4 class="font-bold text-sm">Install Support App</h4>
+                <p class="text-xs text-slate-300">Add to home screen as a full app.</p>
             </div>
         </div>
         <div class="flex items-center space-x-2">
@@ -268,13 +269,13 @@
         </div>
     </div>
 
-    <!-- Mobile Install / Add Shortcut Modal -->
+    <!-- App Installation Instructions Modal -->
     <div id="install-modal" class="fixed inset-0 bg-black/50 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
         <div class="bg-white w-full max-w-md rounded-3xl shadow-2xl p-6 space-y-4">
             <div class="flex justify-between items-center border-b border-slate-100 pb-3">
                 <div class="flex items-center space-x-2 text-indigo-600">
                     <i class="fa-solid fa-arrow-down-to-bracket text-lg"></i>
-                    <h3 class="font-bold text-slate-800 text-base">Install App Shortcut</h3>
+                    <h3 class="font-bold text-slate-800 text-base">Install Standalone App</h3>
                 </div>
                 <button onclick="closeInstallModal()" class="text-slate-400 hover:text-slate-600 text-xl">
                     <i class="fa-solid fa-xmark"></i>
@@ -282,24 +283,24 @@
             </div>
             
             <div class="space-y-3 text-sm text-slate-600">
-                <p>Add this application to your phone's home screen for instant access and reliable alerts:</p>
+                <p>Install this app on your device home screen with its own official app icon and standalone window experience:</p>
                 
                 <div id="pwa-native-box" class="hidden bg-indigo-50 border border-indigo-100 p-4 rounded-xl space-y-2">
-                    <p class="font-semibold text-indigo-900">One-Tap Installation</p>
+                    <p class="font-semibold text-indigo-900">One-Tap Native Installation</p>
                     <button onclick="triggerNativeInstall()" class="w-full bg-indigo-600 hover:bg-indigo-700 text-white font-medium py-2.5 rounded-lg transition text-sm shadow-sm">
-                        Install Now
+                        Install App Now
                     </button>
                 </div>
 
                 <div class="space-y-2 pt-2 border-t border-slate-100">
-                    <p class="font-semibold text-slate-700 text-xs uppercase tracking-wider">Device Instructions:</p>
+                    <p class="font-semibold text-slate-700 text-xs uppercase tracking-wider">Manual Instructions:</p>
                     <div class="bg-slate-50 p-3 rounded-xl border border-slate-200 space-y-1">
                         <p class="font-medium text-slate-800 text-xs"><i class="fa-brands fa-apple text-slate-700 mr-1"></i> iPhone & iPad (Safari)</p>
-                        <p class="text-xs text-slate-500">Tap the <strong class="text-slate-700">Share</strong> button <i class="fa-solid fa-arrow-up-from-bracket"></i> at the bottom toolbar and select <strong class="text-slate-700">"Add to Home Screen"</strong>.</p>
+                        <p class="text-xs text-slate-500">Tap the <strong class="text-slate-700">Share</strong> button <i class="fa-solid fa-arrow-up-from-bracket"></i> and select <strong class="text-slate-700">"Add to Home Screen"</strong>.</p>
                     </div>
                     <div class="bg-slate-50 p-3 rounded-xl border border-slate-200 space-y-1">
                         <p class="font-medium text-slate-800 text-xs"><i class="fa-brands fa-android text-emerald-600 mr-1"></i> Android (Chrome)</p>
-                        <p class="text-xs text-slate-500">Tap the browser menu <strong class="text-slate-700">(3 dots)</strong> and select <strong class="text-slate-700">"Add to Home screen"</strong>.</p>
+                        <p class="text-xs text-slate-500">Tap the browser menu <strong class="text-slate-700">(3 dots)</strong> and select <strong class="text-slate-700">"Install App"</strong> or <strong class="text-slate-700">"Add to Home screen"</strong>.</p>
                     </div>
                 </div>
             </div>
@@ -310,7 +311,7 @@
         </div>
     </div>
 
-    <!-- Ringing Active Notification Overlay Modal -->
+    <!-- Ringing Active Notification Overlay Modal (For when app is open) -->
     <div id="ringing-modal" class="fixed inset-0 bg-rose-950/80 backdrop-blur-md z-50 hidden flex items-center justify-center p-4">
         <div class="bg-white w-full max-w-sm rounded-3xl shadow-2xl p-6 text-center space-y-4 animate-bounce">
             <div class="w-16 h-16 bg-rose-100 text-rose-600 rounded-full flex items-center justify-center mx-auto text-3xl">
@@ -329,7 +330,7 @@
 
     <!-- Footer -->
     <footer class="bg-white border-t border-slate-100 py-4 text-center text-xs text-slate-400">
-        Support Alert Manager Pro &bull; Advanced Audio & Protection Engine
+        Support Alert Manager Pro &bull; Standalone App & Background Notification Engine
     </footer>
 
     <!-- JavaScript Core Script -->
@@ -337,7 +338,7 @@
         // Disable Right-Click Context Menu to protect source code viewing
         document.addEventListener('contextmenu', event => event.preventDefault());
 
-        // Disable Common DevTools Keyboard Shortcuts (F12, Ctrl+Shift+I, Ctrl+Shift+J, Ctrl+U)
+        // Disable Common DevTools Keyboard Shortcuts
         document.addEventListener('keydown', event => {
             if (
                 event.key === 'F12' ||
@@ -348,7 +349,7 @@
             }
         });
 
-        let alerts = JSON.parse(localStorage.getItem('support_alerts_pro_v4')) || [];
+        let alerts = JSON.parse(localStorage.getItem('support_alerts_pro_v5')) || [];
         let activeAudioInterval = null;
         let audioCtx = null;
         let deferredPrompt = null;
@@ -370,7 +371,14 @@
             }
         }, { once: true });
 
-        // PWA Installation & Notification Banner Listeners
+        // Request browser notification permissions immediately on load
+        document.addEventListener('DOMContentLoaded', () => {
+            if (window.Notification && Notification.permission !== "granted" && Notification.permission !== "denied") {
+                Notification.requestPermission();
+            }
+        });
+
+        // PWA Installation Listeners
         window.addEventListener('beforeinstallprompt', (e) => {
             e.preventDefault();
             deferredPrompt = e;
@@ -381,7 +389,6 @@
             }
             document.getElementById('pwa-native-box').classList.remove('hidden');
             
-            // Show the custom bottom notification banner for app installation
             if (!localStorage.getItem('install_banner_dismissed')) {
                 document.getElementById('install-notification-banner').classList.remove('hidden');
             }
@@ -416,7 +423,7 @@
             }
         }
 
-        // Web Audio Synthesizer with 12 Professional Sound Profiles
+        // Web Audio Synthesizer
         function playTone(type) {
             if (!audioCtx) {
                 audioCtx = new (window.AudioContext || window.webkitAudioContext)();
@@ -471,7 +478,7 @@
             document.getElementById('alert-time').blur();
         }
 
-        // Clock & Alarm Monitoring Engine
+        // Clock & Background Alarm Engine
         setInterval(() => {
             const now = new Date();
             const timeString = now.toLocaleDateString() + ' ' + now.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', second: '2-digit' });
@@ -495,7 +502,7 @@
                 if (!alert.triggered && alert.datetime === currentFormatted) {
                     alert.triggered = true;
                     stateUpdated = true;
-                    triggerAlarmOverlay(alert);
+                    triggerAlarmNotification(alert);
                 }
             });
 
@@ -504,21 +511,39 @@
             }
         }
 
-        function triggerAlarmOverlay(alert) {
-            document.getElementById('ring-title').innerText = alert.title;
-            document.getElementById('ring-desc').innerText = alert.desc;
-            document.getElementById('ringing-modal').classList.remove('hidden');
+        // Handles both foreground overlay UI and system background notifications (Clicking it focuses/opens the app)
+        function triggerAlarmNotification(alert) {
+            // 1. If App is open in foreground, show modal overlay + sound
+            if (document.visibilityState === 'visible') {
+                document.getElementById('ring-title').innerText = alert.title;
+                document.getElementById('ring-desc').innerText = alert.desc;
+                document.getElementById('ringing-modal').classList.remove('hidden');
 
-            playTone(alert.sound);
-            if (navigator.vibrate) navigator.vibrate([300, 100, 300]);
-
-            activeAudioInterval = setInterval(() => {
                 playTone(alert.sound);
                 if (navigator.vibrate) navigator.vibrate([300, 100, 300]);
-            }, 1200);
 
+                activeAudioInterval = setInterval(() => {
+                    playTone(alert.sound);
+                    if (navigator.vibrate) navigator.vibrate([300, 100, 300]);
+                }, 1200);
+            }
+
+            // 2. If App is in background / minimized, trigger device push notification with tap-to-open handler
             if (window.Notification && Notification.permission === "granted") {
-                new Notification(alert.title, { body: alert.desc });
+                const notification = new Notification("🔔 Alert Ringing: " + alert.title, {
+                    body: alert.desc,
+                    icon: "https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/svgs/solid/bell.svg",
+                    tag: alert.id,
+                    requireInteraction: true
+                });
+
+                notification.onclick = function() {
+                    window.focus();
+                    notification.close();
+                    document.getElementById('ring-title').innerText = alert.title;
+                    document.getElementById('ring-desc').innerText = alert.desc;
+                    document.getElementById('ringing-modal').classList.remove('hidden');
+                };
             }
         }
 
@@ -672,7 +697,7 @@
         }
 
         function saveAndRender() {
-            localStorage.setItem('support_alerts_pro_v4', JSON.stringify(alerts));
+            localStorage.setItem('support_alerts_pro_v5', JSON.stringify(alerts));
             renderAlerts();
         }
 
@@ -681,9 +706,6 @@
         }
 
         renderAlerts();
-        if (window.Notification && Notification.permission === "default") {
-            Notification.requestPermission();
-        }
     </script>
 </body>
 </html>
